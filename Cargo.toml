@@ -3,9 +3,9 @@
 resolver = "2"
 members = [
     "axum_web",
-    "core_lib",
+    "chat_room",
 ]
-default-members = ["axum_web"]
+default-members = ["chat_room"]
 exclude = []
 
 [workspace.dependencies]
@@ -19,9 +19,6 @@ axum = { version = "0.7.5", features = [
 ] }
 axum-extra = { version = "0.9.3", features = ["typed-header"] }
 chrono = { version = "0.4.38", features = ["serde"] }
-core_lib = { path = "./core_lib" }
-# chat-server = { path = "./chat_server" }
-# notify-server = { path = "./notify_server" }
 jwt-simple = "0.12.9"
 serde = { version = "1.0.198", features = ["derive"] }
 serde_yaml = "0.9.34"
@@ -32,8 +29,8 @@ sqlx = { version = "0.7.4", features = [
   "tls-rustls",
 ] }
 thiserror = "1.0.59"
-tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "macros"] }
-tower = "0.4.13"
+tokio = { version = "1.37.0", features = ["rt", "rt-multi-thread", "macros", "net"] }
+tower = { version = "0.4.13", features = [] }
 tower-http = { version = "0.5.2", features = [
   "compression-full",
   "cors",
@@ -42,3 +39,5 @@ tower-http = { version = "0.5.2", features = [
 ] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+utoipa = { version = "4.2.0", features = ["axum_extras", "chrono"] }
+argon2 = { version = "0.5.3", features = ["std"] }

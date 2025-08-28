@@ -1,3 +1,3 @@
-fn main() {
-    println!("Hello, axum_web!!");
+fn main() -> () {
+  println!("Hello, axun_web!!");
 }

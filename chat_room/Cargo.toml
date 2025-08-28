@@ -1,0 +1,17 @@
+[package]
+name = "chat_room"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_yaml = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+axum = { workspace = true }
+thiserror = { workspace = true }
+utoipa = { workspace = true }
+sqlx = { workspace = true }
+argon2 = { workspace = true }
