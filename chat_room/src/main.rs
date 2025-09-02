@@ -3,7 +3,7 @@ use tokio::net::TcpListener;
 // use std::net::TcpListener;
 use tracing::{info, level_filters::LevelFilter, warn};
 use tracing_subscriber::{Layer as _, fmt::Layer, layer::SubscriberExt, util::SubscriberInitExt};
-use chat_room::{config::AppConfig, get_router};
+use chat_room::{config::AppConfig, get_router, AppState};
 use axum::Router;
 
 #[tokio::main]
@@ -20,13 +20,13 @@ async fn main() -> Result<()> {
     let port: u16 = config.server.port;
     let addr: String = format!("0.0.0.0:{}", port);
 
-    // let app: Router = get_router(config)?;
+    let state = AppState::new(config).await;
+    let app: Router = get_router(state);
 
     let listener: TcpListener = TcpListener::bind(&addr).await?;
     info!("服务启动: {}", addr);
 
-    // axum::serve(listener, app::into_make_service()).await?;
-    // axum::serve(listener, app::into_make_service()).await?;
+    axum::serve(listener, app.into_make_service()).await?;
 
     Ok(())
 }

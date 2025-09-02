@@ -52,6 +52,8 @@ pub enum AppError {
     HttpHeaderError(#[from] axum::http::header::InvalidHeaderValue),
 }
 
+// 实现From Trait, 实现隐式转换
+
 // 将Error -> 响应回请求
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
