@@ -18,16 +18,19 @@ pub struct AppConfig {
 
 impl AppConfig {
     pub fn load() -> Result<Self> {
-        // 几个选项: 优化先exists, 再打开
-        let ret: Result<AppConfig, serde_yaml::Error> = match (File::open("chat.yaml"), File::open("/etc/config/chat.yaml"), env::var("CHAT_CONFIG")) {
-            (Ok(reader), _, _) => serde_yaml::from_reader::<_, AppConfig>(reader),
-            (_, Ok(reader), _) => serde_yaml::from_reader::<_, AppConfig>(reader),
-            (_, _, Ok(path)) => serde_yaml::from_reader::<_, AppConfig>(File::open(path)?),
+        // 默认是父级目录: /Users/hejj/WorkSpace/Zed25/rust-hejj/axum_midend
+        println!("{}", std::env::current_dir().unwrap().display());
+        let ret: Result<AppConfig, serde_yaml::Error> = match (
+            File::open("chat.yaml"),
+            File::open("chat_room/chat.yaml"),
+            File::open("/etc/config/chat.yaml"),
+            env::var("CHAT_CONFIG"),
+        ) {
+            (Ok(reader), _, _, _) => serde_yaml::from_reader::<_, AppConfig>(reader),
+            (_, Ok(reader), _, _) => serde_yaml::from_reader::<_, AppConfig>(reader),
+            (_, _, Ok(reader), _) => serde_yaml::from_reader::<_, AppConfig>(reader),
+            (_, _, _, Ok(path)) => serde_yaml::from_reader::<_, AppConfig>(File::open(path)?),
             _ => bail!("Config file not found!"),
-        };
-
-        let _config: AppConfig = Self {
-            server: ServerConfig { port: 6688 },
         };
         Ok(ret?)
     }

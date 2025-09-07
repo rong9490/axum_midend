@@ -3,14 +3,11 @@ pub mod error;
 pub mod handlers;
 pub mod openapi;
 
-
-use std::{ops::Deref, sync::Arc};
-
+use crate::{error::AppError, handlers::index_handler};
 use anyhow::Result;
 use axum::{Router, routing::get};
 use config::AppConfig;
-
-use crate::{error::AppError, handlers::index_handler};
+use std::{ops::Deref, sync::Arc};
 
 // clone很方便, 自带arc --> 但是 访问inner.config, 简化调用 --> Deref Trait --> 自动target指向inner
 #[derive(Debug, Clone)]
@@ -52,7 +49,6 @@ impl AppState {
 
 // TODO 独立, 隔离, 维护 handler, 否则耦合非常深!
 pub fn get_router(state: AppState) -> Router {
-    // let router = Router::new().route("/", get(|| async { "hello, chat room" }));
     // Ok(router)
     // let state = AppState::new(config);
     // 不断 get / post / patch / update / delete / message / ... 链式调用
@@ -86,10 +82,14 @@ pub fn get_router(state: AppState) -> Router {
     //     .route("/signup", post(signup_handler))
     //     .layer(cors);
 
-    // let app = Router::new().openapi().route("/", get(index_handler)).nest("/api", api).with_state(state);
-
     // Ok(set_layer(app))
 
+    // TODO 梳理路由与handler
     let api = Router::new();
-    Router::new().route("/", get(index_handler)).nest("/api", api).with_state(state)
+    Router::new()
+        // .openapi()
+        .route("/", get(index_handler))
+        .route("/hello", get(|| async { "hello, chatRoom!" }))
+        .nest("/api", api)
+        .with_state(state)
 }
